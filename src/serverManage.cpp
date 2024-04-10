@@ -9,7 +9,7 @@
 #include "serverManage.hpp"
 #include <dirent.h>
 
-#define CONF_DIR_PATH   "/.ssh-manager.conf"
+#define CONF_DIR_NAME   ".ssh-manager.conf"
 
 std::string serverManager::detectConfigFiles(){
     if (!configFile.empty()) configFile.clear();
@@ -18,7 +18,7 @@ std::string serverManager::detectConfigFiles(){
         std::cerr << "Home directory path cannot be determined.\n";
         std::exit(EXIT_FAILURE);
     }
-    std::string confDirPath = std::string(homePath) + CONF_DIR_PATH;
+    std::string confDirPath = std::string(homePath) + "/" + CONF_DIR_NAME;
     DIR * dir;
     struct dirent *ent;
     dir = opendir(confDirPath.c_str());
