@@ -1,5 +1,4 @@
 # HOW TO USE
----
 ## config file
 Please refer the '.ssh-manager' directory and make it on your home directory.
 You can make multiple config file
