@@ -24,7 +24,7 @@ std::string serverManager::detectConfigFiles(){
     dir = opendir(confDirPath.c_str());
     if( dir!= NULL){
         while ((ent=readdir(dir)) != NULL){
-            if ( ent->d_name == std::string(".") | ent->d_name == std::string("..") ) continue; // except . and ..
+            if ( ent->d_name == std::string(".") || ent->d_name == std::string("..") ) continue; // except . and ..
             configFile.push_back(confDirPath + "/" + std::string(ent->d_name));
         }
         closedir(dir);
