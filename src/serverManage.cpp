@@ -52,7 +52,7 @@ void serverManager::loadConfigs(const std::string& filePath){
 
     if (!file.is_open()){
         std::cerr << "Cannot open the config file.\n";
-        std::cerr << "Check the '.connect.easy.conf' dir or specify the config file.\n";
+        std::cerr << "Check the '.ssh-manager.conf' dir or specify the config file.\n";
         std::cerr << "Exit..\n";
         std::exit(EXIT_FAILURE);
         return;
