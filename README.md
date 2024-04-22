@@ -17,7 +17,7 @@ alias field should be filled, eventhough it is empty.
     {
         "username": "chanhoo",
         "ip": [
-            {"address": "192.168.131", "alias": "wrongPC"},
+            {"address": "192.168.131", "alias": ""},
             {"address": "192.168.132", "alias": "foo"}
         ]
     }

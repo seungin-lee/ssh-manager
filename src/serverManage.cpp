@@ -59,30 +59,40 @@ void serverManager::loadConfigs(const std::string& filePath){
         std::exit(EXIT_FAILURE);
         return;
     }
-    json jfile;
-    file >> jfile;
 
-    for (auto& element : jfile){
-        // if it faces the second 'username'contents, serverConfig struct must be generated again.
-        if ( isConfigActive) {
-            this->serverConfigList.push_back(currentConfig);
-            currentConfig = serverConfig(); //error point
+    try {
+        json jfile;
+        file >> jfile;
+    
+        for (auto& element : jfile){
+            // if it faces the second 'username'contents, serverConfig struct must be generated again.
+            if ( isConfigActive) {
+                this->serverConfigList.push_back(currentConfig);
+                currentConfig = serverConfig(); //error point
+            }
+            currentConfig.username = element["username"];
+            isConfigActive = true;
+            for ( auto& ipInfo : element["ip"] ){
+                
+                currentInfo.ip = ipInfo["address"];
+                currentInfo.target = currentConfig.username + "@" + currentInfo.ip;
+                currentInfo.alias = ipInfo["alias"];
+                currentConfig.servers.push_back(currentInfo);
+                currentInfo = serverInfo();
+            }
         }
-        currentConfig.username = element["username"];
-        isConfigActive = true;
-        for ( auto& ipInfo : element["ip"] ){
-            
-            currentInfo.ip = ipInfo["address"];
-            currentInfo.target = currentConfig.username + "@" + currentInfo.ip;
-            currentInfo.alias = ipInfo["alias"];
-            currentConfig.servers.push_back(currentInfo);
-            currentInfo = serverInfo();
+    
+        if (isConfigActive) {
+            serverConfigList.push_back(currentConfig);
         }
+    } catch ( json::parse_error& e) {
+        std::cout << "parsing error: " << e.what() << '\n';
+        std::exit(EXIT_FAILURE);
+    } catch ( json::exception& e) {
+        std::cout << "Exception: " << e.what() << '\n';
+        std::exit(EXIT_FAILURE);
     }
 
-    if (isConfigActive) {
-        serverConfigList.push_back(currentConfig);
-    }
 }
 
 void serverManager::printConfigFiles() const{
