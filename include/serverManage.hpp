@@ -4,10 +4,15 @@
 #include <string>
 #include <vector>
 
+typedef struct serverInfo {
+    std::string ip; // ip address
+    std::string target; // username@ipaddress
+    std::string alias; // alias
+} serverInfo;
+
 typedef struct serverConfig {
     std::string username; // username
-    std::vector<std::string> iplist; // ip address
-    std::vector<std::string> target; // username@ipaddress
+    std::vector<serverInfo> servers;
 } serverConfig;
 
 class serverManager {

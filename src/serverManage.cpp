@@ -4,12 +4,14 @@
 
 #include <sstream>
 #include <fstream>
-#include <algorithm>
 
 #include "serverManage.hpp"
+#include "json.hpp"
 #include <dirent.h>
 
 #define CONF_DIR_NAME   ".ssh-manager.conf"
+
+using json = nlohmann::json;
 
 std::string serverManager::detectConfigFiles(){
     if (!configFile.empty()) configFile.clear();
@@ -46,7 +48,7 @@ std::string serverManager::detectConfigFiles(){
 
 void serverManager::loadConfigs(const std::string& filePath){
     std::ifstream file(filePath);
-    std::string line;
+    serverInfo currentInfo;
     serverConfig currentConfig;
     bool isConfigActive = false;
 
@@ -57,46 +59,24 @@ void serverManager::loadConfigs(const std::string& filePath){
         std::exit(EXIT_FAILURE);
         return;
     }
-    // read file line by line then parse username and ip address
-    // Example of config file
-    // ------------------------
-    // username: travis
-    // ip: ['192.168.45.131','192.168.45.132'] 
-    //
-    // username: seungin
-    // ip: ['100.1.4.2']
-    // ------------------------
+    json jfile;
+    file >> jfile;
 
-    while (std::getline(file, line)){
-        std::istringstream iss(line);
-        std::string key; 
-        std::string value;
-        if (std::getline(iss, key, ':')){ // get the value before the ':' keyword
-            std::getline(iss, value); // get the value after the ':' keyword 
-
-            if (key=="username") {
-                // if it faces the second 'username'contents, serverConfig struct must be generated again.
-                if (isConfigActive) {
-                    serverConfigList.push_back(currentConfig);
-                    currentConfig = serverConfig();
-                }
-                value.erase(std::remove(value.begin(), value.end(), ' '), value.end()); //remove blank
-                value.erase(std::remove(value.begin(), value.end(), '\t'), value.end()); //remove tab
-                currentConfig.username = value;
-                isConfigActive = true;
-            } else if ( key == "ip" && isConfigActive){
-                // remove blank and [] then sperate with ','
-                value.erase(std::remove(value.begin(), value.end(), '['), value.end());
-                value.erase(std::remove(value.begin(), value.end(), ']'), value.end());
-                value.erase(std::remove(value.begin(), value.end(), ' '), value.end());
-                std::istringstream valueStream(value);
-                std::string ip;
-                while(std::getline(valueStream, ip, ',')){
-                    ip = ip.substr(1,ip.length()-2);
-                    currentConfig.iplist.push_back(ip);
-                    currentConfig.target.push_back(currentConfig.username + "@" + ip);
-                }
-            }
+    for (auto& element : jfile){
+        // if it faces the second 'username'contents, serverConfig struct must be generated again.
+        if ( isConfigActive) {
+            this->serverConfigList.push_back(currentConfig);
+            currentConfig = serverConfig(); //error point
+        }
+        currentConfig.username = element["username"];
+        isConfigActive = true;
+        for ( auto& ipInfo : element["ip"] ){
+            
+            currentInfo.ip = ipInfo["address"];
+            currentInfo.target = currentConfig.username + "@" + currentInfo.ip;
+            currentInfo.alias = ipInfo["alias"];
+            currentConfig.servers.push_back(currentInfo);
+            currentInfo = serverInfo();
         }
     }
 
@@ -113,11 +93,11 @@ void serverManager::printConfigFiles() const{
     }
 }
 void serverManager::printConfigs() const{
+    int num = 0;
     std::cout << std::endl;
-    int i = 0;
     for (const auto& config : serverConfigList){
-        for (const auto& target : config.target){
-            std::cout << i++ << " : " << target << std::endl;
+        for ( int j = 0; j < config.servers.size(); j++){
+            std::cout << num++ << " : " << config.servers[j].target << " (" << config.servers[j].alias << ")" << std::endl;
         }
     }
 }
@@ -125,9 +105,9 @@ void serverManager::printConfigs() const{
 std::string serverManager::returnTargetAddress (const int idx) const {
     int count = 0;
     for (const auto& config : serverConfigList){
-        for (const auto& target : config.target){
+        for ( int j = 0; j < config.servers.size(); j++){
             if(count == idx) {
-                return target;
+                return config.servers[j].target;
             }
             count++;
         }
