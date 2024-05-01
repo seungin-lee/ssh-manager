@@ -1,11 +1,11 @@
 # HOW TO USE
-This program is made for connecting/managing to multiple hosts easily.
-You can access to the other hosts and send/receive the files to/from the other hosts easily.
-For using this, `ssh` and `scp` must be installed in your systems. 
+This program is made for connecting/managing to multiple hosts easily.  
+You can access to the other hosts and send/receive the files to/from the other hosts easily.  
+For using this, `ssh` and `scp` must be installed in your systems.  
 
 ## config file
-Please refer the '.ssh-manager' directory and make it on your home directory.
-You can make multiple config file
+Please refer the '.ssh-manager' directory and make it on your home directory.  
+You can make multiple config file  
 ```
 git clone <...>
 cd ssh-manager
@@ -13,7 +13,7 @@ cp -rfp .ssh-manager.conf ~/
 ```
 
 ### Example of config file (~/.ssh-manager.conf/.ssh-manager.conf.A)
-alias field should be filled, eventhough it is empty. (Format as json)
+alias field should be filled, eventhough it is empty. (Format as json)  
 ```
 [
     {
