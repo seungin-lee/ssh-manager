@@ -32,23 +32,3 @@ alias field should be filled, eventhough it is empty. (Format as json)
     }
 ]
 ```
-
-## Execute the binary
-```
-travis@DESKTOP-TVCKN81:~/project/toy/ssh-manager$ ./ssh-manager
-
-0 : /home/travis/.ssh-manager.conf/ssh-manager.conf.A
-1 : /home/travis/.ssh-manager.conf/ssh-manager.conf.B
-------------------------------------------------
-Select the target config file : 0
-
-0 : travis@192.168.45.131 (miniPC)
-1 : travis@192.168.45.132 ()
-2 : chanhoo@192.168.131 (wrongPC)
-3 : chanhoo@192.168.132 (foo)
-------------------------------------------------
-Select the target server : 0
-Trying to connect to travis@192.168.45.131
-ssh -X travis@192.168.45.131
-travis@192.168.45.131's password:
-```
