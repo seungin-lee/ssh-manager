@@ -5,6 +5,7 @@
 #include <vector>
 
 typedef struct serverInfo {
+    std::string username; // username
     std::string ip; // ip address
     std::string target; // username@ipaddress
     std::string alias; // alias
@@ -35,6 +36,7 @@ class serverManager {
         void printConfigs() const; 
         // return the target
         std::string returnTargetAddress (const int idx) const; 
+        std::string returnTargetUsername (const int idx) const; 
 };
 
 #endif

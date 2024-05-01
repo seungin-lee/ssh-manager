@@ -3,6 +3,7 @@
 
 #include "serverManage.hpp"
 int ssh_connect ( const serverManager& manager );
+int scp_connect ( const serverManager& manager );
 
 
 #endif

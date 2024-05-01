@@ -73,7 +73,7 @@ void serverManager::loadConfigs(const std::string& filePath){
             currentConfig.username = element["username"];
             isConfigActive = true;
             for ( auto& ipInfo : element["ip"] ){
-                
+                currentInfo.username = currentConfig.username;
                 currentInfo.ip = ipInfo["address"];
                 currentInfo.target = currentConfig.username + "@" + currentInfo.ip;
                 currentInfo.alias = ipInfo["alias"];
@@ -126,3 +126,16 @@ std::string serverManager::returnTargetAddress (const int idx) const {
     throw std::out_of_range("Index out of range");
 }
 
+std::string serverManager::returnTargetUsername (const int idx) const {
+    int count = 0;
+    for (const auto& config : serverConfigList){
+        for ( int j = 0; j < config.servers.size(); j++){
+            if(count == idx) {
+                return config.servers[j].username;
+            }
+            count++;
+        }
+    }
+
+    throw std::out_of_range("Index out of range");
+}
