@@ -33,7 +33,7 @@ class serverManager {
         // print the config file list
         void printConfigFiles() const; 
         // print the serverConfigList
-        void printConfigs() const; 
+        int printConfigs() const; 
         // return the target
         std::string returnTargetAddress (const int idx) const; 
         std::string returnTargetUsername (const int idx) const; 

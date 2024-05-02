@@ -8,12 +8,14 @@
 #include "serverManage.hpp"
 #include "json.hpp"
 #include <dirent.h>
+#include "common.hpp"
 
 #define CONF_DIR_NAME   ".ssh-manager.conf"
 
 using json = nlohmann::json;
 
 std::string serverManager::detectConfigFiles(){
+    static int count = 0;
     if (!configFile.empty()) configFile.clear();
     const char* homePath = std::getenv("HOME");
     if (!homePath){
@@ -40,8 +42,8 @@ std::string serverManager::detectConfigFiles(){
 
     int index;
     std::cin >> index;
-    if ( index >= configFile.size()) {
-        std::cerr << "Error : Out of Index. " << "Select the right index again\n\n";
+    if ( std::cin.fail() || index > configFile.size() -1 ) {
+        cinClear( count );
         return detectConfigFiles(); // recursive
     } else return configFile[index];
 }
@@ -102,7 +104,7 @@ void serverManager::printConfigFiles() const{
         std::cout << i++ << " : " << filename << std::endl;
     }
 }
-void serverManager::printConfigs() const{
+int serverManager::printConfigs() const{
     int num = 0;
     std::cout << std::endl;
     for (const auto& config : serverConfigList){
@@ -110,6 +112,7 @@ void serverManager::printConfigs() const{
             std::cout << num++ << " : " << config.servers[j].target << " (" << config.servers[j].alias << ")" << std::endl;
         }
     }
+    return num-1;
 }
 
 std::string serverManager::returnTargetAddress (const int idx) const {
@@ -122,8 +125,7 @@ std::string serverManager::returnTargetAddress (const int idx) const {
             count++;
         }
     }
-
-    throw std::out_of_range("Index out of range");
+    return ""; // idx must be in the range. So it is not necessary to add exception
 }
 
 std::string serverManager::returnTargetUsername (const int idx) const {
@@ -136,6 +138,5 @@ std::string serverManager::returnTargetUsername (const int idx) const {
             count++;
         }
     }
-
-    throw std::out_of_range("Index out of range");
+    return "";
 }

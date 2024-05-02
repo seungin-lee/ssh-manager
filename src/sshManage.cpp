@@ -1,6 +1,7 @@
 #include <cstdlib> // system command
 #include <iostream>
 #include "sshManage.hpp"
+#include "common.hpp"
 
 static int send_command(std::string& command){
     std::cout << command << std::endl;
@@ -13,21 +14,20 @@ static int send_command(std::string& command){
 }
 
 int ssh_connect( const serverManager& manager){
-    manager.printConfigs();
+    static int count = 0;
+    int num = manager.printConfigs();
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << "Select the target server : ";
 
     int index;
     std::cin >> index;
-
-    std::string target;
-    try {
-        target = manager.returnTargetAddress(index);
-
-    } catch (const std::out_of_range& e){
-        std::cerr << "Error : " << e.what() << std::endl;
-        return -1;
+    if ( std::cin.fail() || index > num -1){ 
+        cinClear(count);
+        return ssh_connect( manager );
     }
+        
+    std::string target;
+    target = manager.returnTargetAddress(index);
 
     std::cout << "Trying to connect to " << target << std::endl;
     std::string command = "ssh -X " + target;
@@ -61,31 +61,40 @@ void enter_path(std::string& localPath, std::string& remotePath, std::string& us
 }
 
 int scp_connect( const serverManager& manager){
-    manager.printConfigs();
+    static int count = 0;
+    int num = manager.printConfigs();
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << "Select the target server : ";
 
     int index;
     std::cin >> index;
+    if ( std::cin.fail() || index > num -1){
+        cinClear(count);
+        return scp_connect( manager );
+    }
 
     std::string target;
     std::string username;
 
-    try {
-        target = manager.returnTargetAddress(index);
-        username = manager.returnTargetUsername(index);
-    } catch (const std::out_of_range& e){
-        std::cerr << "Error : " << e.what() << std::endl;
-        return -1;
-    }
+    target = manager.returnTargetAddress(index);
+    username = manager.returnTargetUsername(index);
 
+    count = 0;
     std::cout << "\nSCP Target is " << target << std::endl;
     std::cout << "0 : Send to the target" << std::endl;
     std::cout << "1 : Receive from the target" << std::endl;
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << "Select the Send/Receive operation : ";
     std::cin >> index;
-
+    while (std::cin.fail() || index > 1){
+        cinClear(count);
+        std::cout << "\nSCP Target is " << target << std::endl;
+        std::cout << "0 : Send to the target" << std::endl;
+        std::cout << "1 : Receive from the target" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "Select the Send/Receive operation : ";
+        std::cin >> index;
+    }
 
     std::string localPath;
     std::string remotePath;
@@ -100,14 +109,7 @@ int scp_connect( const serverManager& manager){
         enter_path(localPath, remotePath, username);
         command = "scp -r "+ target + ":" + remotePath + " " + localPath;
         std::cout << "Trying to connect to " << target << std::endl;
-    } else {
-        std::cerr << "Wrong Index! Please enter right index number\n";
     }
 
     return send_command( command );
 }
-
-
-
-
-

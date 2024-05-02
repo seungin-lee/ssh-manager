@@ -1,6 +1,6 @@
 CPP = g++
 INCLUDE_DIR += include
-CFLAGS = -I$(INCLUDE_DIR)
+CFLAGS = -I$(INCLUDE_DIR) -g
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 TARGET = ssh-manager

@@ -1,8 +1,9 @@
-#include "serverManage.hpp"
-#include "sshManage.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
+#include "serverManage.hpp"
+#include "sshManage.hpp"
+#include "common.hpp"
 
 // Initial configuration. Decide the feature of this program.
 static std::vector<std::pair<std::string, bool>> features = {
@@ -11,7 +12,8 @@ static std::vector<std::pair<std::string, bool>> features = {
 };
 
 // Initial screen. User should select the feature of this program.
-void select_features(){
+int select_features(){
+    static int count = 0;
     int num = 0;
     for (const auto& feature : features) {
         std::cout << num++ << " : " << feature.first << std::endl;
@@ -20,9 +22,13 @@ void select_features(){
     std::cout << "Select the target feature : ";
     int index;
     std::cin >> index;
-
-    features[index].second = true;
-
+    if ( std::cin.fail() || index > features.size() -1 ){
+        cinClear(count);
+        return select_features();
+    } else {
+        features[index].second = true;
+        return 0;
+    }
 }
 
 
