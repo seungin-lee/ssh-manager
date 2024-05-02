@@ -40,16 +40,28 @@ std::string serverManager::detectConfigFiles(){
         std::cerr << "can't open the dir\n";
         std::exit(EXIT_FAILURE);
     }
-    serverManager::printConfigFiles();
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "Select the target config file : ";
 
-    int index;
-    std::cin >> index;
-    if ( std::cin.fail() || index > configFile.size() -1 ) {
-        cinClear( count );
-        return detectConfigFiles(); // recursive
-    } else return configFile[index];
+    if ( configFile.size() > 1 ){
+        serverManager::printConfigFiles();
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "Select the target config file : ";
+    
+        int index;
+        std::cin >> index;
+        if ( std::cin.fail() || index > configFile.size() -1 ) {
+            cinClear( count );
+            return detectConfigFiles(); // recursive
+        } else 
+            return configFile[index];
+    } else if ( configFile.size() == 1 ){
+        std::cout << configFile[0] << " is selected.\n";
+        return configFile[0];
+    } else {
+        std::cout << "There is no config file. Please make it. Refer the directory .ssh-manager\n";
+        std::cout << "Config file must contain '.conf'\n";
+        std::exit(EXIT_FAILURE);
+    }
+
 }
 
 void serverManager::loadConfigs(const std::string& filePath){
@@ -129,7 +141,7 @@ std::string serverManager::returnTargetAddress (const int idx) const {
             count++;
         }
     }
-    return ""; // idx must be in the range. So it is not necessary to add exception
+    return ""; // idx is sure in the range. So it is not necessary to add exception
 }
 
 std::string serverManager::returnTargetUsername (const int idx) const {
