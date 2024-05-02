@@ -31,7 +31,7 @@ class serverManager {
         // load, parse and fill the object(serverConfig, serverConfigList)
         void loadConfigs(const std::string& filePath); 
         // print the config file list
-        void printConfigFiles() const; 
+        int printConfigFiles() const; 
         // print the serverConfigList
         int printConfigs() const; 
         // return the target

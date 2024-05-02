@@ -17,6 +17,7 @@ using json = nlohmann::json;
 
 std::string serverManager::detectConfigFiles(){
     static int count = 0;
+    int num;
     if (!configFile.empty()) configFile.clear();
     const char* homePath = std::getenv("HOME");
     if (!homePath){
@@ -42,13 +43,13 @@ std::string serverManager::detectConfigFiles(){
     }
 
     if ( configFile.size() > 1 ){
-        serverManager::printConfigFiles();
+        num = serverManager::printConfigFiles();
         std::cout << "------------------------------------------------" << std::endl;
         std::cout << "Select the target config file : ";
     
         int index;
         std::cin >> index;
-        if ( std::cin.fail() || index > configFile.size() -1 ) {
+        if ( std::cin.fail() || index > num -1 ) {
             cinClear( count );
             return detectConfigFiles(); // recursive
         } else 
@@ -113,12 +114,13 @@ void serverManager::loadConfigs(const std::string& filePath){
 
 }
 
-void serverManager::printConfigFiles() const{
+int serverManager::printConfigFiles() const{
+    int num = 0;
     std::cout << std::endl;
-    int i = 0;
     for (const auto& filename : configFile){
-        std::cout << i++ << " : " << filename << std::endl;
+        std::cout << num++ << " : " << filename << std::endl;
     }
+    return num-1;
 }
 int serverManager::printConfigs() const{
     int num = 0;
