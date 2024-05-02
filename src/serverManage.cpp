@@ -10,7 +10,8 @@
 #include <dirent.h>
 #include "common.hpp"
 
-#define CONF_DIR_NAME   ".ssh-manager.conf"
+#define CONF_DIR_NAME   ".ssh-manager"
+#define CONF_FILE_PATTERN ".conf"
 
 using json = nlohmann::json;
 
@@ -28,8 +29,11 @@ std::string serverManager::detectConfigFiles(){
     dir = opendir(confDirPath.c_str());
     if( dir!= NULL){
         while ((ent=readdir(dir)) != NULL){
-            if ( ent->d_name == std::string(".") || ent->d_name == std::string("..") ) continue; // except . and ..
-            configFile.push_back(confDirPath + "/" + std::string(ent->d_name));
+            std::string d_name = std::string(ent->d_name);
+            if ( d_name == std::string(".") || d_name == std::string("..") ) continue; // except . and ..
+            if ( d_name.find(CONF_FILE_PATTERN) != std::string::npos ) {
+                configFile.push_back(confDirPath + "/" + std::string(ent->d_name));
+            }
         }
         closedir(dir);
     } else {

@@ -4,15 +4,16 @@ You can access to the other hosts and send/receive the files to/from the other h
 For using this, `ssh` and `scp` must be installed in your systems.  
 
 ## config file
-Please refer the '.ssh-manager.conf' directory and make it on your home directory(copy it).  
+Please refer the '.ssh-manager' directory and make it on your home directory(copy it).  
 You can also make multiple config file  
 ```
 git clone <...>
 cd ssh-manager
-cp -rfp .ssh-manager.conf ~/
+cp -rfp .ssh-manager ~/
+ls ~/.ssh-manager
 ```
 
-### Example of config file (~/.ssh-manager.conf/.ssh-manager.conf.A)
+### Example of config file (~/.ssh-manager/homeserver.conf)
 alias field should be filled, eventhough it is empty. (Format as json)  
 ```
 [
