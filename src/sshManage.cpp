@@ -44,14 +44,18 @@ void enter_path(std::string& localPath, std::string& remotePath, std::string& us
         std::cout << "\nEnvironment Variable 'USER' is not set in this system.\n" ;
         std::cout << "Please note to use '~' path.\n";
     } else {
-        std::string localuname(localUserName);
-        localPath.replace(localPath.find("~"), 1, "/home/"+ localuname);
+        if ( localPath.find("~") != std::string::npos){
+            std::string localuname(localUserName);
+            localPath.replace(localPath.find("~"), 1, "/home/"+ localuname);
+        }
     }
     std::cout << "\nLocal path is set as " << localPath <<std::endl;
 
     std::cout << "\nEnter the absolute path of remote file/directory path\n" << "Remote Path : " ;
     std::cin >> remotePath;
-    remotePath.replace(remotePath.find("~"), 1, "/home/"+username);
+    if ( remotePath.find("~") != std::string::npos ){
+        remotePath.replace(remotePath.find("~"), 1, "/home/"+username);
+    }
     std::cout << "\nRemote path is set as " << remotePath <<std::endl;
     std::cout << std::endl;
 }
