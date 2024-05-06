@@ -49,7 +49,7 @@ std::string serverManager::detectConfigFiles(){
     
         int index;
         std::cin >> index;
-        if ( std::cin.fail() || index > num -1 ) {
+        if ( std::cin.fail() || index > num ) {
             cinClear( count );
             return detectConfigFiles(); // recursive
         } else 

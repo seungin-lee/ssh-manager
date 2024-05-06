@@ -21,7 +21,7 @@ int ssh_connect( const serverManager& manager){
 
     int index;
     std::cin >> index;
-    if ( std::cin.fail() || index > num -1){ 
+    if ( std::cin.fail() || index > num){ 
         cinClear(count);
         return ssh_connect( manager );
     }
@@ -68,7 +68,7 @@ int scp_connect( const serverManager& manager){
 
     int index;
     std::cin >> index;
-    if ( std::cin.fail() || index > num -1){
+    if ( std::cin.fail() || index > num ){
         cinClear(count);
         return scp_connect( manager );
     }
